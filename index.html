@@ -70,6 +70,7 @@
       <option value="found">Found</option>
     </select>
     <input type="text" id="location" placeholder="Where was it lost/found?" required>
+    <input type="text" id="person" placeholder="Person and Contact Details" required>
     <button type="submit">Submit</button>
   </form>
 
@@ -91,14 +92,16 @@
       const desc = document.getElementById("item-desc").value.trim();
       const type = document.getElementById("item-type").value;
       const location = document.getElementById("location").value.trim();
+      const person = document.getElementById("person").value.trim();
 
-      if (!name || !desc || !location) return;
+      if (!name || !desc || !location || !person) return;
 
       const item = {
         name,
         desc,
         type,
         location,
+        person,
         time: new Date().toLocaleString()
       };
 
@@ -114,7 +117,8 @@
         <strong>[${item.type.toUpperCase()}]</strong> ${item.name} <br>
         <em>${item.desc}</em><br>
         📍LOCATION: ${item.location} <br>
-        📅DATE AND TIME: ${item.time}
+        📅DATE AND TIME: ${item.time} <br>
+        👤PERSON: ${item.person}
       `;
       itemsContainer.prepend(div);
     }
