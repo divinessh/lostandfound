@@ -1,0 +1,136 @@
+<!--Created by Divinessh-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Lost & Found</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+    ::selection{
+      background:#5a42f5;
+      color:white;
+    }
+    body {
+      font-family: Poppins, Arial, sans-serif;
+      background: #f3f4f6;
+      padding: 20px;
+      max-width: 700px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #2563eb;
+    }
+    form, .items {
+      background: white;
+      padding: 40px;
+      font-family:poppins;
+      border-radius: 12px;
+      margin-top: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    input, select, textarea, button {
+      display: block;
+      width: 100%;
+      font-family:poppins;
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      background: #2563eb;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .item {
+      border-bottom: 1px solid #ddd;
+      padding: 10px 0;
+    }
+    .item:last-child {
+      border-bottom: none;
+    }
+    .item strong {
+      color: #111827;
+    }
+  </style>
+</head>
+<body>
+  <h1>📦🔍Campus Lost & Found</h1>
+
+  <form id="lostFoundForm">
+    <p>This web app is to help students to <b>report lost and found items</b> around campus efficiently. Once submitted, the item will appear in the recently lost and found items section below this form.</p>
+    <input type="text" id="item-name" placeholder="Item (example : earphones/..)" required>
+    <textarea id="item-desc" placeholder="Describe the item you have lost/found" required></textarea>
+    <select id="item-type">
+      <option value="lost">Lost</option>
+      <option value="found">Found</option>
+    </select>
+    <input type="text" id="location" placeholder="Where was it lost/found?" required>
+    <button type="submit">Submit</button>
+  </form>
+
+  <div class="items" id="itemList">
+    <h3>✅ Recent Items</h3>
+    <div id="itemsContainer"></div>
+  </div>
+
+  <p><center>&copy;University of ABCD, 2025.</center></p>
+
+  <script>
+    const form = document.getElementById("lostFoundForm");
+    const itemsContainer = document.getElementById("itemsContainer");
+
+    form.addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("item-name").value.trim();
+      const desc = document.getElementById("item-desc").value.trim();
+      const type = document.getElementById("item-type").value;
+      const location = document.getElementById("location").value.trim();
+
+      if (!name || !desc || !location) return;
+
+      const item = {
+        name,
+        desc,
+        type,
+        location,
+        time: new Date().toLocaleString()
+      };
+
+      addItemToDOM(item);
+      saveItem(item);
+      form.reset();
+    });
+
+    function addItemToDOM(item) {
+      const div = document.createElement("div");
+      div.classList.add("item");
+      div.innerHTML = `
+        <strong>[${item.type.toUpperCase()}]</strong> ${item.name} <br>
+        <em>${item.desc}</em><br>
+        📍LOCATION: ${item.location} <br>
+        📅DATE AND TIME: ${item.time}
+      `;
+      itemsContainer.prepend(div);
+    }
+
+    function saveItem(item) {
+      const items = JSON.parse(localStorage.getItem("campusItems") || "[]");
+      items.unshift(item);
+      localStorage.setItem("campusItems", JSON.stringify(items));
+    }
+
+    function loadItems() {
+      const items = JSON.parse(localStorage.getItem("campusItems") || "[]");
+      items.forEach(addItemToDOM);
+    }
+
+    loadItems();
+  </script>
+</body>
+</html>
